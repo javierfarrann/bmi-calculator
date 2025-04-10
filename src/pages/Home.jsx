@@ -17,7 +17,7 @@ function Home() {
         <p className="text-gray-600 mb-6">Track your body mass index with ease</p>
         <div className="flex flex-col gap-4">
           <button
-            onClick={() => navigate("/bmi")}
+            onClick={() => navigate("/bmicalculator")}
             className="w-full bg-green-500 text-white p-3 rounded hover:bg-green-600 transition"
           >
             Go to BMI Calculator

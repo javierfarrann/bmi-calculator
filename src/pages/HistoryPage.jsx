@@ -22,7 +22,7 @@ const HistoryPage = () => {
 
       try {
         const q = query(
-          collection(db, "bmiHistory"),
+          collection(db, "users", user.uid, "bmiHistory"),
           where("uid", "==", user.uid),
           orderBy("date", "asc")
         );

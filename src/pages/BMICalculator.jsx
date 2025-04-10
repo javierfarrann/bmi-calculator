@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { db, auth } from '../firebase/firebase';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
-import { useNavigate } from "react-router-dom";
 
 function BMI() {
   const [weight, setWeight] = useState("");
@@ -25,7 +24,6 @@ function BMI() {
     const bmiStatus = getStatus(calculatedBmi);
     setStatus(bmiStatus);
 
-    // 🔥 Simpan ke Firestore
     const user = auth.currentUser;
     if (user) {
       try {
@@ -36,12 +34,14 @@ function BMI() {
           bmi: parseFloat(calculatedBmi),
           status: bmiStatus,
           createdAt: Timestamp.now(),
-          date: new Date().toISOString().split("T")[0], // YYYY-MM-DD (penting buat chart)
+          date: new Date().toISOString().split("T")[0], // YYYY-MM-DD
         });
         console.log("✅ BMI record saved!");
       } catch (err) {
         console.error("❌ Error saving BMI record:", err);
       }
+    } else {
+      console.error("❌ No user is logged in.");
     }
   };
 
