@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { auth, db } from '@/firebase/firebase'; // pastikan path-nya sesuai
+import { auth, db } from '@/firebase/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 
@@ -45,34 +45,55 @@ export default function ProfilePage() {
   if (!userData) return <div className="p-4">Loading...</div>;
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white rounded-xl shadow-lg">
-      <h1 className="text-2xl font-bold mb-4">👤 Profil</h1>
-
-      <div className="space-y-4">
-        {['username', 'birthdate', 'gender', 'height', 'weight'].map((field) => (
-          <div key={field}>
-            <label className="block font-medium capitalize">{field}</label>
-            {editMode ? (
-              <input
-                type={field === 'birthdate' ? 'date' : 'text'}
-                name={field}
-                value={formData[field]}
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
-              />
-            ) : (
-              <div className="p-2 border rounded bg-gray-100">{userData[field]}</div>
-            )}
+    <div className="min-h-screen bg-gray-50 py-10 px-4">
+      <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md p-8">
+        <div className="mb-6 border-b pb-4 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
+              👤 Profil Saya
+            </h1>
+            <p className="text-gray-500 text-sm">Kelola informasi pribadi kamu</p>
           </div>
-        ))}
-      </div>
+          <button
+            onClick={() => (editMode ? handleSave() : setEditMode(true))}
+            className={`px-4 py-2 rounded-lg font-medium ${
+              editMode
+                ? 'bg-green-600 text-white hover:bg-green-700'
+                : 'bg-blue-600 text-white hover:bg-blue-700'
+            }`}
+          >
+            {editMode ? 'Simpan' : 'Edit Profil'}
+          </button>
+        </div>
 
-      <div className="mt-6">
-        {editMode ? (
-          <button onClick={handleSave} className="px-4 py-2 bg-green-600 text-white rounded">Simpan</button>
-        ) : (
-          <button onClick={() => setEditMode(true)} className="px-4 py-2 bg-blue-600 text-white rounded">Edit Profil</button>
-        )}
+        <div className="grid md:grid-cols-2 gap-6">
+          {[
+            { label: 'Username', name: 'username' },
+            { label: 'Tanggal Lahir', name: 'birthdate', type: 'date' },
+            { label: 'Jenis Kelamin', name: 'gender' },
+            { label: 'Tinggi Badan (cm)', name: 'height' },
+            { label: 'Berat Badan (kg)', name: 'weight' }
+          ].map(({ label, name, type = 'text' }) => (
+            <div key={name}>
+              <label className="block text-sm font-medium text-gray-600 mb-1">
+                {label}
+              </label>
+              {editMode ? (
+                <input
+                  type={type}
+                  name={name}
+                  value={formData[name]}
+                  onChange={handleChange}
+                  className="w-full p-3 border rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              ) : (
+                <div className="w-full p-3 border rounded-lg bg-gray-100 text-gray-700">
+                  {userData[name] || '-'}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
